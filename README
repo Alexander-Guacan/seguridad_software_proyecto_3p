@@ -1,0 +1,99 @@
+# 🔍 Plataforma de Monitoreo y Detección de Ataques en Redes IP
+
+Este proyecto es una **plataforma de monitoreo y análisis de ataques en redes IP** en un entorno virtualizado. Utiliza **Pyshark** para capturar tráfico de red y **Flask** para mostrar las alertas en una interfaz web en tiempo real. Además, genera reportes descargables de los ataques detectados.
+
+## 📌 **Características**
+✅ Captura y analiza tráfico de red en tiempo real.  
+✅ Detección de ataques como:  
+   - **DDoS** (Tráfico SYN Flood).  
+   - **Escaneo de Puertos** (Nmap, ataques automatizados).  
+   - **Man-in-the-Middle (MITM)** (ARP Spoofing).  
+   - **Inyección de Paquetes Maliciosos** (SQL Injection, etc.).  
+✅ Interfaz web con actualización automática.  
+✅ Generación de reportes en **CSV** descargables.  
+
+---
+
+## 🚀 **Instalación**
+
+### **1️⃣ Clonar el Repositorio**
+```bash
+git clone https://github.com/tuusuario/monitor-redes.git
+cd monitor-redes
+```
+
+### Crear un Entorno Virtual en Python
+```bash
+python3 -m venv venv
+source venv/bin/activate  # En Linux/Mac
+venv\Scripts\activate      # En Windows
+```
+
+### Instalar las Dependencias
+```bash
+pip install -r requirements.txt
+```
+
+### Dependencias principales:
+
+- Flask (para la interfaz web).
+- Pyshark (para captura de paquetes).
+- Wireshark/Tshark (para análisis de red).
+
+## Configuración Adicional
+
+### Instalar tshark
+Es necesario para capturar paquetes. Instálalo según tu sistema operativo:
+
+```bash
+sudo apt update && sudo apt install wireshark tshark -y
+```
+
+## Uso
+
+### Ejecutar el Servidor
+Asegúrate de que el entorno virtual esté activado (source venv/bin/activate) y ejecuta:
+```bash
+python app.py
+```
+
+### Acceder a la Interfaz Web
+Abre un navegador entra en:
+```bash
+http://localhost:5000
+```
+Podrás ver las alertas en tiempo real y descargar los reportes.
+
+### Probar Simulación de Ataques (Opcional)
+Desde otra máquina en la red (por ejemplo, Kali Linux), puedes probar ataques:
+
+- Simular DDoS (SYN Flood)
+```bash
+hping3 -c 1000 -d 120 -S -w 64 -p 80 --fast <ip_flask_server>
+```
+
+- Simular Escaneo de Puertos
+```bash
+nmap -p 1-1000 <ip_flask_server>
+```
+
+- Simular MITM (ARP Spoofing)
+```bash
+sudo ettercap -T -M arp:remote /<ip_flask_server>/ /<ip_gateway_flask_server>/
+```
+
+- Simular Inyección de Paquetes
+```bash
+echo -e "DROP TABLE users; --" | nc <ip_flask_server> 80
+```
+##  Descargar Reportes
+Los ataques detectados se guardan en un archivo CSV llamado reportes_ataques.csv.
+Desde la interfaz web, puedes hacer clic en "📥 Descargar Reporte" para obtenerlo.
+
+## Detener el Servidor
+Para detener el servidor, presiona Ctrl + C en la terminal.
+
+Si deseas salir del entorno virtual, usa:
+```bash
+deactivate
+```

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor de Ataques en Tiempo Real</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .log-container {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .alert {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="title text-primary">🔍 Monitor de Ataques en Tiempo Real</h1>
+        <div class="d-flex justify-content-between mb-3">
+            <button class="btn btn-primary" onclick="fetchLogs()">🔄 Actualizar Manualmente</button>
+            <a href="/descargar_reporte" class="btn btn-success">📥 Descargar Reporte</a>
+        </div>
+        <div class="log-container">
+            <ul id="logs" class="list-group">
+                <!-- Aquí se insertarán los logs de ataques -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function fetchLogs() {
+            fetch('/logs')
+                .then(response => response.json())
+                .then(data => {
+                    const logsContainer = document.getElementById('logs');
+                    logsContainer.innerHTML = '';
+
+                    if (data.length === 0) {
+                        logsContainer.innerHTML = '<li class="list-group-item text-muted">No hay ataques detectados.</li>';
+                    } else {
+                        data.forEach(log => {
+                            const logItem = document.createElement('li');
+                            logItem.classList.add('list-group-item', 'alert');
+
+                            if (log.includes('[DDoS]')) {
+                                logItem.classList.add('alert-danger'); // Rojo
+                            } else if (log.includes('[Escaneo de Puertos]')) {
+                                logItem.classList.add('alert-warning'); // Amarillo
+                            } else if (log.includes('[MITM]')) {
+                                logItem.classList.add('alert-info'); // Azul
+                            } else if (log.includes('[Inyección de Paquetes]')) {
+                                logItem.classList.add('alert-dark'); // Negro
+                            } else {
+                                logItem.classList.add('alert-secondary'); // Gris
+                            }
+
+                            logItem.textContent = log;
+                            logsContainer.appendChild(logItem);
+                        });
+                    }
+                });
+        }
+
+        // Actualizar los logs cada 5 segundos automáticamente
+        setInterval(fetchLogs, 5000);
+
+        // Cargar logs al inicio
+        fetchLogs();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
