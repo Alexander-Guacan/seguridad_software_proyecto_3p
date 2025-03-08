@@ -49,6 +49,14 @@ Es necesario para capturar paquetes. Instálalo según tu sistema operativo:
 sudo apt update && sudo apt install wireshark tshark -y
 ```
 
+### Otorgar permisos para uso de tshark
+Es necesario dar permisos a tshark para que pueda detectar los paquetes y los analice
+
+```bash
+sudo usermod -aG wireshark $USER
+sudo usermod -aG wireshark $USER
+```
+
 ## Uso
 
 ### Ejecutar el Servidor
